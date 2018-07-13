@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nucom.module.visualizer.gui.GUIController">
+   <top>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Button fx:id="BUTTON_LOAD" mnemonicParsing="false" onAction="#ON_LOAD_ACTION" text="BUTTON_LOAD" />
+        </items>
+      </ToolBar>
+   </top>
+   <center>
+      <AnchorPane fx:id="CONTENT_PANE" BorderPane.alignment="CENTER">
+         <children>
+            <WebView fx:id="BROWSER" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children></AnchorPane>
+   </center>
+</BorderPane>

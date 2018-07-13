@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <title>Network | Basic usage</title>
+
+    <script type="text/javascript" src="graphLibraries/vis.min.js"></script>
+    <link href="graphLibraries/vis-network.min.css" rel="stylesheet" type="text/css" />
+	<link href="graphLibraries/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        #mynetwork {
+            width: 100%;
+            height: 95vh;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+    // create a network
+    var container = document.getElementById('mynetwork');
+    // create an array with nodes
+    var nodes = new vis.DataSet();
+
+    // create an array with edges
+    var edges = new vis.DataSet();
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+
+    var options = {
+		edges :
+		{
+			  color: 
+			  {
+			  color:'orange',
+			  highlight:'#848484',
+			  hover: '#848484',
+			  opacity:1.0
+			}
+		},
+		interaction:
+		{
+			zoomView: false
+		}
+	};
+    
+    
+    var network = new vis.Network(container, data, options);
+
+	var afterzoomlimit = { //here we are setting the zoom limit to move to 
+    scale: 1.00,
+	}
+
+    function setTheData(nodesArray,edgesArray) {
+        nodes = new vis.DataSet(nodesArray);
+        edges = new vis.DataSet(edgesArray);
+        network.setData({nodes:nodes, edges:edges});
+        network.setOptions(
+        	{
+        		layout:
+        		{
+        			hierarchical:
+        			{
+        				sortMethod:'directed'
+        			},
+        			randomSeed:1337
+        		}
+        	}
+        );
+    }
+	
+	network.on ('click', function(params)
+	{
+		console.log("Click Function Called");
+		
+		console.log("Edges:" + params.edges.length);
+		console.log("Nodes:" + params.nodes.length);	
+		OnClickController.Submit(params.nodes, params.edges);
+	});
+
+	</script>
+
+
+</body>
+</html>
