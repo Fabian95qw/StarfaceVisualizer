@@ -2,6 +2,7 @@ package nucom.module.visualizer.call;
 
 public class Peer 
 {
+	private String AccountID="";
 	private String Callednumber ="";
 	private String Calleduser ="";
 	private String Peer ="";
@@ -31,6 +32,15 @@ public class Peer
 
 	public String getPeer() {
 		return Peer;
+	}
+
+	public void setAccountID(String AccountID)
+	{
+		this.AccountID = AccountID;
+	}
+
+	public String getAccountID() {
+		return AccountID;
 	}
 
 	

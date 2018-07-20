@@ -30,6 +30,9 @@ public class PeerAdapter extends TypeAdapter<Peer>
 			case Peer:
 				P.setPeer(JR.nextString());
 				break;
+			case Accountid:
+				P.setAccountID(JR.nextString());
+				break;
 			default:
 				break;
 			}

@@ -3,6 +3,7 @@ package nucom.module.visualizer.entrypoint;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import nucom.module.visualizer.utility.WebViewLogger;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
@@ -19,12 +20,15 @@ public class EntryPoint extends Application
 	public void start(Stage Root_Stage)
 	{
 		try 
-		{			
+		{	
+			WebViewLogger WVL = new WebViewLogger();
+			WVL.equals(null);
+			
 			Root_Stage.setWidth(1700);
 			Root_Stage.setHeight(700);
 				
 			Root_Stage.setMaximized(true);
-			
+						
 			FXMLLoader GUILOADER = new FXMLLoader();
 			//
 			BP_ROOT = GUILOADER.load(EntryPoint.class.getResourceAsStream("/nucom/module/visualizer/gui/GUI.fxml"));

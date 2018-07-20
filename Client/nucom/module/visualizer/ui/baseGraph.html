@@ -44,7 +44,7 @@
 		},
 		interaction:
 		{
-			zoomView: false
+			zoomView: true
 		}
 	};
     
@@ -52,8 +52,15 @@
     var network = new vis.Network(container, data, options);
 
 	var afterzoomlimit = { //here we are setting the zoom limit to move to 
-    scale: 1.00,
+    scale: 0.75,
 	}
+	
+	network.on("zoom",function(){ //while zooming 
+    if(network.getScale() <= 0.74 )//the limit you want to stop at
+    {
+        network.moveTo(afterzoomlimit); //set this limit so it stops zooming out here
+    } 
+	});
 
     function setTheData(nodesArray,edgesArray) {
         nodes = new vis.DataSet(nodesArray);
@@ -68,6 +75,7 @@
         				sortMethod:'directed'
         			},
         			randomSeed:1337
+
         		}
         	}
         );
@@ -81,6 +89,8 @@
 		console.log("Nodes:" + params.nodes.length);	
 		OnClickController.Submit(params.nodes, params.edges);
 	});
+
+	
 
 	</script>
 

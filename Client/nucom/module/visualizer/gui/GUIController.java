@@ -26,7 +26,15 @@ import javafx.stage.FileChooser;
 import netscape.javascript.JSObject;
 import nucom.module.visualizer.call.CallStep;
 import nucom.module.visualizer.call.CallStepAdapter;
+import nucom.module.visualizer.call.Peer;
+import nucom.module.visualizer.edges.Edge;
 import nucom.module.visualizer.jsevents.OnClickController;
+import nucom.module.visualizer.nodes.EntryPointNode;
+import nucom.module.visualizer.nodes.GroupNode;
+import nucom.module.visualizer.nodes.Node;
+import nucom.module.visualizer.nodes.PhoneNode;
+import nucom.module.visualizer.nodes.UnknownNode;
+import nucom.module.visualizer.nodes.UserNode;
 import nucom.module.visualizer.utility.Log;
 import nucom.module.visualizer.utility.LogHelper;
 
@@ -42,6 +50,9 @@ public class GUIController
 	private WebEngine WE = null;
 	private VisGraph Graph = null;
 	
+	private List<Node> Nodes= null;
+	private List<Edge> Edges = null;
+	
 	public GUIController()
 	{}
 
@@ -50,6 +61,9 @@ public class GUIController
 	{		
 		log = new Log(this.getClass());
 		log.debug("Initialized GUIController");
+		Nodes= new ArrayList<Node>();
+		Edges = new ArrayList<Edge>();
+		
 		InitGraph();
 	}
 
@@ -121,8 +135,9 @@ public class GUIController
 				log.debug("Loading Completed. Result");
 				log.debug("CallSteps: " + CallSteps.size());
 				
-				
-				
+				setData(CallSteps);
+				refreshgraph();
+								
 			}
 			catch(Exception e)
 			{
@@ -130,6 +145,80 @@ public class GUIController
 			}
 			
 		}
+	}
+	
+	private void setData(List<CallStep> CallSteps)
+	{
+		Nodes= new ArrayList<Node>();
+		Edges = new ArrayList<Edge>();
+		CallStep LastStep = new CallStep();
+		LastStep.setCallState("NEW");
+		Node LastNode = new EntryPointNode("EntryPoint");
+		
+		Node N = null;
+		Edge E = null;
+		Nodes.add(LastNode);
+		for(CallStep CS: CallSteps)
+		{
+			log.debug(CS.getCallState()+" "+CS.getPeers().size());
+			if(CS.getPeers().size() > 1)
+			{
+				N = new GroupNode(CS.getPeers().get(0).getCalleduser());
+				E = new Edge(LastNode, N, LastStep.getCallState());
+				Nodes.add(N);
+				Edges.add(E);
+			}
+			else if(CS.getPeers().size() == 1)
+			{
+				N = new UserNode(CS.getPeers().get(0).getCalleduser());
+				E = new Edge(LastNode, N, LastStep.getCallState());
+				Nodes.add(N);
+				Edges.add(E);				
+			}
+			else
+			{
+				N = new UnknownNode(CS.getCallState());
+				E = new Edge(LastNode , N, LastStep.getCallState());
+				Nodes.add(N);
+				Edges.add(E);
+			}
+			
+			for(Peer P : CS.getPeers())
+			{
+				Node UN = new PhoneNode(P.getPeer());
+				Nodes.add(UN);
+				Edge E2 = new Edge(N, UN, CS.getCallState());
+				E2.getVE().setColor("red");
+				Edges.add(E2);
+			}
+			
+			LastNode = N;
+			LastStep = CS;
+		}
+		
+	}
+	
+	private void refreshgraph()
+	{
+		Graph.clear();
+		for(Node N : Nodes)
+		{
+			Graph.addNodes(N.getVN());
+			
+			log.debug(N.getVN().toJson());
+		}
+		
+		
+		for(Edge E : Edges)
+		{
+			Graph.addEdges(E.getVE());
+		
+			log.debug(E.getVE().toJson());
+		}
+		
+		 String script = "setTheData(" + Graph.getNodesJson() +  "," + Graph.getEdgesJson() + ")";
+		 WE.executeScript(script);
+		
 	}
 	
 	
