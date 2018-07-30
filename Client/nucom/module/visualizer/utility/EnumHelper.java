@@ -6,6 +6,7 @@ public class EnumHelper
 	{
 		DateTime,
 		CallState,
+		Type,
 		Peers
 	}
 
@@ -15,6 +16,13 @@ public class EnumHelper
 		Calleduser,
 		Callednumber,
 		Peer
+	}
+	
+	public enum TypeData
+	{
+		USER,
+		GROUP,
+		UNKNOWN
 	}
 	
 	public enum NodeType
@@ -30,5 +38,35 @@ public class EnumHelper
 		PHONE, UNKNOWN
 	}
 	
+	
+	public enum CallState
+	{
+		UNKNOWN,
+		 ATXFER,
+		  BUSY,
+		  CCBS_ACTIVE,
+		  CCBS_AVAILIBLE,
+		  CCBS_INACTIVE,
+		  COMPLETED,
+		  CONFERENCE,
+		  CONFERENCE_INACTIVE,
+		  CONSULTATION_CALL,
+		  CONSULTATION_CALL_CONFERENCE,
+		  FORWARDING,
+		  LINKED,
+		  LOGIN_LOGOUT,
+		  MUSICONHOLD_TEST,
+		  NEW,
+		  PARKED,
+		  PROCEEDING,
+		  REDIRECTED,
+		  RINGING,
+		  STANDBY,
+		  STANDBY_REDIRECTED,
+		  UNPARKED,
+		  UP,
+		  VOICEMAILBOXLINKED,
+		  VOICEMAILMAIN
+	}
 }
 
