@@ -6,14 +6,23 @@ public class EnumHelper
 	{
 		DateTime,
 		CallState,
+		Type,
 		Peers
 	}
 
 	public enum PeerData
 	{
+		Accountid,
 		Calleduser,
 		Callednumber,
 		Peer
+	}
+	
+	public enum TypeData
+	{
+		USER,
+		GROUP,
+		UNKNOWN
 	}
 }
 
