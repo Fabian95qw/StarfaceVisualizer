@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import de.starface.ch.processing.bo.api.types.Call;
 import de.starface.ch.processing.bo.api.types.CallState;
 import de.starface.ch.processing.bo.api.types.ParticipationInfo;
+import de.vertico.starface.module.core.runtime.IAGIRuntimeEnvironment;
 
 public class CallStep 
 {
@@ -25,6 +26,7 @@ public class CallStep
 	{
 		this.log=log;
 		this.D = new Date();
+		
 		if(C != null)
 		{
 			this.C=C;
@@ -61,6 +63,10 @@ public class CallStep
 			return false;
 		}
 		
+		if(State.equals(CallState.VOICEMAILBOXLINKED) && CS.getCallState().equals(CallState.VOICEMAILBOXLINKED))
+		{
+			return true;
+		}
 		
 		if(Called.size() == 0 && CS.getCalled().size() != 0)
 		{
@@ -72,6 +78,10 @@ public class CallStep
 			boolean Found =false;
 			for(ParticipationInfo PC2 : CS.getCalled())
 			{
+				if(PC1.getSipCallId() == null || PC2.getSipCallId() == null)
+				{
+					continue;
+				}
 				if(PC1.getSipCallId().equals(PC2.getSipCallId()))
 				{
 					Found = true;
@@ -161,10 +171,10 @@ public class CallStep
 		return SDF.format(D);	
 	}
 	
-	public String toJson()
+	public String toJson(IAGIRuntimeEnvironment context)
 	{
 		GsonBuilder GB = new GsonBuilder();
-		GB.registerTypeAdapter(CallStep.class, new CallStepAdapter());
+		GB.registerTypeAdapter(CallStep.class, new CallStepAdapter(context));
 		return GB.create().toJson(this);
 	}
 	
