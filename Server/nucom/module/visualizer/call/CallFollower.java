@@ -65,16 +65,23 @@ public class CallFollower implements Runnable
 			log.debug(CS);
 		}
 		*/
+		CM.addStep(new CallStep(null, log));
 		
 		log.debug("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#");
 		
 		List<String> GSONs = new ArrayList<String>();
 		
+		StringBuilder SB = new StringBuilder();
+		SB.append(System.lineSeparator());
+		
 		for(CallStep CS : CM.getSteps())
 		{
-			log.debug(CS.toJson());
-			GSONs.add(CS.toJson());
+			SB.append(CS.toJson(context));
+			SB.append(System.lineSeparator());
+			GSONs.add(CS.toJson(context));
 		}
+		
+		log.debug(SB.toString());
 				
 	}
 }
