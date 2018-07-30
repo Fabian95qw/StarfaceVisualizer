@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import netscape.javascript.JSObject;
+import nucom.module.visualizer.gui.GUIController;
 import nucom.module.visualizer.utility.Log;
 
 public class OnClickController 
 {
-	Log log =null;
+	private Log log =null;
+	private GUIController GC = null;
 	
-	private boolean SpecialSubmit = false;
-	
-	public OnClickController()
+	public OnClickController(GUIController GC)
 	{
 		log = new Log(this.getClass());
+		this.GC=GC;
 	}
 	
 	public void Submit(Object Nodes, Object Edges)
@@ -22,10 +23,10 @@ public class OnClickController
 
 		try
 		{
-			List<String>NodesList = toNodeList(Nodes);
-			List<String>EdgesList = toEdgesList(Edges);
+			List<String>NodeList = toNodeList(Nodes);
+			List<String>EdgeList = toEdgesList(Edges);
+			GC.showInfo(NodeList, EdgeList);
 			
-
 		}
 		catch(Exception e)
 		{
