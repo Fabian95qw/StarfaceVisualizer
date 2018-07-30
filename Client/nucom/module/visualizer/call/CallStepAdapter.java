@@ -14,6 +14,8 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import nucom.module.visualizer.utility.EnumHelper.CallData;
+import nucom.module.visualizer.utility.EnumHelper.CallState;
+import nucom.module.visualizer.utility.EnumHelper.TypeData;
 import nucom.module.visualizer.utility.Log;
 import nucom.module.visualizer.utility.LogHelper;
 
@@ -44,7 +46,15 @@ public class CallStepAdapter extends TypeAdapter<CallStep>
 			switch(CD)
 			{
 			case CallState:
-				CS.setCallState(JR.nextString());
+				try
+				{
+					CS.setCallState(CallState.valueOf(JR.nextString()));
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					CS.setCallState(CallState.UNKNOWN);
+				}
 				break;
 			case DateTime:
 				CS.setDateTime(JR.nextString());
@@ -69,7 +79,17 @@ public class CallStepAdapter extends TypeAdapter<CallStep>
 					LogHelper.EtoStringLog(log, e);
 				}
 				CS.setPeers(Peers);
-				
+				break;
+			case Type:
+				try
+				{
+					CS.setType(TypeData.valueOf(JR.nextString()));
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					CS.setType(TypeData.UNKNOWN);
+				}
 				break;
 			}
 		}
