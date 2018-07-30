@@ -35,8 +35,10 @@ import nucom.module.visualizer.nodes.Node;
 import nucom.module.visualizer.nodes.PhoneNode;
 import nucom.module.visualizer.nodes.UnknownNode;
 import nucom.module.visualizer.nodes.UserNode;
+import nucom.module.visualizer.nodes.VoicemailNode;
 import nucom.module.visualizer.utility.Log;
 import nucom.module.visualizer.utility.LogHelper;
+import nucom.module.visualizer.utility.EnumHelper.CallState;
 
 public class GUIController
 {	
@@ -86,7 +88,7 @@ public class GUIController
 			log.debug("Error while loading baseGraph");
 			e.printStackTrace();
 		}
-		OnClickController OCC = new OnClickController();
+		OnClickController OCC = new OnClickController(this);
 		WE.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() 
 		{
 			@Override
@@ -152,43 +154,51 @@ public class GUIController
 		Nodes= new ArrayList<Node>();
 		Edges = new ArrayList<Edge>();
 		CallStep LastStep = new CallStep();
-		LastStep.setCallState("NEW");
+		LastStep.setCallState(CallState.NEW);
 		Node LastNode = new EntryPointNode("EntryPoint");
 		
 		Node N = null;
 		Edge E = null;
 		Nodes.add(LastNode);
+		
 		for(CallStep CS: CallSteps)
 		{
 			log.debug(CS.getCallState()+" "+CS.getPeers().size());
-			if(CS.getPeers().size() > 1)
+			switch(CS.getCallState())
 			{
-				N = new GroupNode(CS.getPeers().get(0).getCalleduser());
-				E = new Edge(LastNode, N, LastStep.getCallState());
-				Nodes.add(N);
-				Edges.add(E);
+			case VOICEMAILBOXLINKED:
+				N = new VoicemailNode(CS.getPeers().get(0).getCalleduser());
+				E = new Edge (LastNode , N, CS.getCallState().toString());
+				break;
+			default:
+				
+				switch(CS.getT())
+				{
+				case GROUP:
+					N = new GroupNode(CS.getPeers().get(0).getCalleduser());
+					E = new Edge(LastNode, N, CS.getCallState().toString());
+					break;
+				case UNKNOWN:
+					N = new UnknownNode(CS.getCallState().toString());
+					E = new Edge(LastNode, N, CS.getCallState().toString());
+					break;
+				case USER:
+					N = new UserNode(CS.getPeers().get(0).getCalleduser());
+					E = new Edge(LastNode, N, CS.getCallState().toString());
+					break;				
+				}
+				break;
+			
 			}
-			else if(CS.getPeers().size() == 1)
-			{
-				N = new UserNode(CS.getPeers().get(0).getCalleduser());
-				E = new Edge(LastNode, N, LastStep.getCallState());
-				Nodes.add(N);
-				Edges.add(E);				
-			}
-			else
-			{
-				N = new UnknownNode(CS.getCallState());
-				E = new Edge(LastNode , N, LastStep.getCallState());
-				Nodes.add(N);
-				Edges.add(E);
-			}
+			Nodes.add(N);
+			Edges.add(E);
 			
 			for(Peer P : CS.getPeers())
 			{
 				Node UN = new PhoneNode(P.getPeer());
 				Nodes.add(UN);
-				Edge E2 = new Edge(N, UN, CS.getCallState());
-				E2.getVE().setColor("red");
+				Edge E2 = new Edge(N, UN, "");
+				E2.getVE().setColor("green");
 				Edges.add(E2);
 			}
 			
@@ -218,6 +228,12 @@ public class GUIController
 		
 		 String script = "setTheData(" + Graph.getNodesJson() +  "," + Graph.getEdgesJson() + ")";
 		 WE.executeScript(script);
+		
+	}
+
+	public void showInfo(List<String> NodeList, List<String> EdgeList) 
+	{
+		// TODO Auto-generated method stub
 		
 	}
 	
